@@ -17,4 +17,5 @@ The function: functionfplot.m plots the Figure 4 in the overleaf document.
 This is just for analysis.
 
 The outpust of main function are the convergence rates comparison between
-Monte Carlo and Importance Sampling (Figure 6 in the Overleaf).
+Monte Carlo and Importance Sampling (Figure 6 in the Overleaf). These figures
+are inside folder Exercise14 with names: convergence_K3 and convergence_K6
