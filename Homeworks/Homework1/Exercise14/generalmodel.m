@@ -1,23 +1,23 @@
 clc; clear;
 
-% ------------ Parámetros ------------
+% ------------ Parameters ------------
 M  = 1e6;
 w  = 0.5;
-Ns = [2 20];      % N=2 y N=20
-rng(42);          % reproducible (opcional)
+Ns = [2 20];      % N=2 and N=20
+rng(42);          % reproducible (optional)
 
-% Tamaño final del PDF (figura completa) en pulgadas
-Wtot = 9.5;   % ancho total (p. ej. pensado para \textwidth)
-Htot = 4.5;   % alto total
+% Final PDF size (whole figure) in inches
+Wtot = 9.5;   % total width (e.g., for \textwidth)
+Htot = 4.5;   % total height
 
-% Evitar que abra ventanas (opcional)
+% Prevent opening windows (optional)
 set(groot,'defaultFigureVisible','off');
 
-% ------------ Figura combinada ------------
+% ------------ Combined figure ------------
 fig = figure('Units','inches','Position',[1 1 Wtot Htot],'Color','w');
 tlo = tiledlayout(fig,1,2,'TileSpacing','compact','Padding','compact');
 
-allY = [];   % para unificar Y-lims en ambos subplots
+allY = [];   % to unify Y-lims across both subplots
 
 for k = 1:numel(Ns)
     N = Ns(k);
@@ -30,34 +30,34 @@ for k = 1:numel(Ns)
 
     grid on; xlim([1e1, M]); xlabel('M');
     if k==1, ylabel('Statistical error'); end
-    title(sprintf('Oscillatory, N = %d', N));  % mismo naming que usas
+    title(sprintf('Oscillatory, N = %d', N));  % same naming you use
 
     legend(ax,'Interpreter','latex','Location','best');
 
-    % Guardar datos de Y para límites unificados
+    % Store Y data for unified limits
     allY = [allY;
             max(S.err(10:end),eps);
             max(S.clt(10:end),eps);
             max(S.be(10:end), eps)];
 end
 
-% Unificar límites de Y en ambos ejes (recomendado)
+% Unify Y limits on both axes (recommended)
 ylims = [min(allY), max(allY)];
 axArr = findall(fig,'Type','axes');
 set(axArr,'YLim', ylims);
 
-% ------------ Exportar PDF vectorial del tamaño exacto de la figura ------------
+% ------------ Export vector PDF with exact figure size ------------
 outname = 'Oscillatory_N2_N20.pdf';
 exportgraphics(fig, outname, 'ContentType','vector', 'BackgroundColor','none');
 
-close(fig);  % opcional
+close(fig);  % optional
 set(groot,'defaultFigureVisible','on');
 
 fprintf('Saved %s\n', outname);
 
 % ========= Helper =========
 function S = compute_curves(M,N,w)
-    % Tu integrando y estadísticos
+    % Your integrand and statistics
     u = rand(M,N);
     cN=9/N;
     Iexact = osc_exact_equal(N,w);
@@ -67,7 +67,7 @@ function S = compute_curves(M,N,w)
     m = (1:M).';
     run_aver = cumsum(f) ./ m;
 
-    % sigma global (MLE, divide por M)
+    % global sigma (MLE, divides by M)
     sigma = std(f, 1);
 
     % CLT 95%
@@ -87,7 +87,7 @@ function S = compute_curves(M,N,w)
     C0_BE = zalpha + Km ./ (2*phi_z*(1+zalpha)^3);
     be_m  = C0_BE .* sigma ./ sqrt(m);
 
-    % Salida
+    % Output
     S.m   = m;
     S.err = abs(run_aver - Iexact);
     S.clt = clt_m;

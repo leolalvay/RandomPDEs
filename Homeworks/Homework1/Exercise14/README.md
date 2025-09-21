@@ -1,0 +1,15 @@
+The list of these codes solve the task 1.4 (Item 1 to 3 only )
+of section Numerical tasks (pg 3) in the Homework Set 1 document.
+
+The functions chosen in Section 1.3(Model Problems) are:
+1. Oscillatory
+2. Product Peak
+3. Continuous
+
+The matlab functions that runs the tasks for functions above are named:
+
+1. generalmodel.m
+2. productpeak.m
+3. continuous.m
+
+Each file computes produces a combined plot which are the ones in the overleaf document.
