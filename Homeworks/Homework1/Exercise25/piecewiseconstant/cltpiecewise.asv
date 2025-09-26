@@ -1,0 +1,38 @@
+clear; clc;
+
+M=1e5;
+sigma = 0.15;
+N = [10 20 40];
+l = 2;
+
+% --- CLT 95% band (global sigma) ---
+alpha  = 0.05;
+zalpha = -sqrt(2)*erfcinv(2*(1 - alpha/2));   % ≈ 1.96
+n = numel(N);
+C = zeros(M,n);
+% --- Global sigma (use the same for CLT and B–E) ---
+m = (1:M).';
+for i =1:n
+Q = sampleQuPW(M, sigma, N(i), l);
+sN = std(Q, 0);   
+C(:,i)  = zalpha * sN ./ sqrt(m);
+end
+
+% --- Plot ---
+figure('Color','w','Units','inches','Position',[1 1 9.5 4.0]);
+loglog(m, C(:,1), 'LineWidth',1.5); hold on;  
+loglog(m, C(:,2), 'LineWidth',1.5);            
+loglog(m, C(:,3), 'LineWidth',1.5);            
+grid on;
+xlabel('M','Interpreter','latex','FontSize',14);
+ylabel('Statistical error', 'Interpreter','latex', 'FontSize',14);
+
+legend( ...
+    sprintf('$N = %d$', N(1)), ...
+    sprintf('$N= %d$', N(2)), ...
+     sprintf('$N= %d$', N(3)), ...
+    'Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
+title(sprintf('CLT bounds for $Q(u_h)$ (M=%d, $\\sigma$=%.2f)', M, sigma), ...
+      'Interpreter','latex','FontSize',14);
+
+exportgraphics(figure(1), 'mode.pdf', 'ContentType', 'vector');
